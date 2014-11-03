@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ChipsWatcher</title>
+	<script src="http://popcornjs.org/code/dist/popcorn-complete.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+	<link href="starter-template.css" rel="stylesheet">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+	   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Noli Me Tangere</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1 id="touch">Touch Me Not.</h1>
+        <p class="lead" id="touch1">Interactive Controls for Intense Video-Watching!</p>
+        <p id="touch2"> Here's Noli Me Tangere (Touch Me Not), a way to control your videos without having to even touch your computer! Simply enter something you're interested in, click the "Get Interactive Now" button, and watch away. To pause the video, simply punch towards the screen. Punch again to restart. It's that easy. <a href=""id="link">Get Interactive Now!</a></p> </p>
+      </div>
+
+    </div>
+	<div class="input-group input-group-lg" id="special">
+      <input type="text" class="form-control" id="query" placeholder="Enter something interesting here!">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" id="search">Go!</button>
+      </span>
+    </div>
+
+
+	<div id="resultsTarget" style="width:600px;height:400px;"></div>
+
+	
+	<div>
+	</br>
+	</br>
+		<p align="center" style="color:white">Developed by Patrick Wee, NYU 2017</p>
+	</div>
+
+	
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+
+
+	 <script>
+
+
+		var myKey = 'AIzaSyBoPnC66vZ9hJZzKPPvWY-3GEQHw6-xQmk';
+		function makeYoutubeRequest(term){
+			var url = 'https://www.googleapis.com/youtube/v3/search?';
+			var myParams = 'part=snippet&q=' + term + '&type=video&order=viewCount&key=';
+
+			var myURL = url + myParams + myKey;
+
+			$.ajax({
+				url: myURL,
+				type: 'GET',
+				dataType: 'jsonp',
+				error: function(data){
+					console.log("We got problems");
+					console.log(data.status);
+				},
+				success: function(data){
+					console.log("WooHoo!");
+					console.log(data);
+					//return;
+
+					//Get the video id
+					var theVideoId = data.items[0].id.videoId;
+					console.log(theVideoId);
+					//Create the youtube video link
+					var theVideoLink = 'http://www.youtube.com/watch?v=' + theVideoId;
+
+					popcornfunction(theVideoLink);
+				}
+			})
+		};
+
+
+		$(document).ready(function(){
+				console.log("LOADED!!!!");
+				$("#search").click(function(){
+					console.log("Clicked search");
+					$("#resultsTarget").html("");
+					var newSearchTerm = $("#query").val();
+					console.log(newSearchTerm);
+					makeYoutubeRequest(newSearchTerm)
+				});
+
+
+				$("#query").keypress(function(e){
+					if (e.which == 13){
+						$("#search").trigger('click');
+					}
+				})
+			});
+				
+
+
+
+	var videothing=true;
+	var fun;
+
+	var popcornfunction =function(videolink){
+
+		fun=Popcorn.smart( "#resultsTarget", videolink );
+		fun.play();
+		console.log("I'm printing fun!");
+		console.log(fun);
+		
+			
+
+
+		var autoplay = function() {
+			console.log("I'm printing fun!");
+			console.log(fun);
+		
+
+		function getScripts(urls, callback) {
+			var numDone = 0;
+			
+			function getScript(url, callback) {
+				var script = document.createElement('script'),
+						head = document.getElementsByTagName('head')[0],
+						done = false;
+				
+					script.src = url;
+					script.onload = script.onreadystatechange = function() {
+						if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
+							done = true;
+							callback();
+							script.onload = script.onreadystatechange = null;
+							head.removeChild(script);
+						}
+					};
+				
+				head.appendChild(script);
+			}
+			
+			function getScriptCallback() {
+				if (urls.length > 0) getScript(urls.shift(), getScriptCallback);
+				else callback();
+			}
+
+			getScript(urls.shift(), getScriptCallback);
+	  }
+	  
+	  getScripts([
+			'//mtschirs.github.io/js-objectdetect/examples/js/compatibility.js',
+	    
+			'//mtschirs.github.io/js-objectdetect/js/objectdetect.js',
+			'//mtschirs.github.io/js-objectdetect/js/objectdetect.handfist.js',
+
+			'//mtschirs.github.io/js-objectdetect/examples/js/jquery.js',
+			'//mtschirs.github.io/js-objectdetect/js/jquery.objectdetect.js'],
+
+			function () {
+				var canvas = $('<canvas style="position: fixed; z-index: 1001;top: 70px; right: 10px; opacity: 0.9">').get(0),
+						context = canvas.getContext('2d'),
+						video = document.createElement('video'),
+						fist_pos_old;
+				
+				document.getElementsByTagName('body')[0].appendChild(canvas);
+				
+				try {
+					compatibility.getUserMedia({video: true}, function(stream) {
+						try {
+							video.src = compatibility.URL.createObjectURL(stream);
+						} catch (error) {
+							video.src = stream;
+						}
+						compatibility.requestAnimationFrame(play);
+					}, function (error) {
+						alert("WebRTC not available");
+					});
+				} catch (error) {
+					alert(error);
+				}
+				
+				
+
+				function play() {
+
+					compatibility.requestAnimationFrame(play);
+					if (video.paused) video.play();
+					
+					if (video.readyState === video.HAVE_ENOUGH_DATA) {
+						
+						/* Draw video overlay */
+						canvas.width = ~~(100 * video.videoWidth / video.videoHeight);
+						canvas.height = 100;
+						context.drawImage(video, 0, 0, canvas.clientWidth, canvas.clientHeight);
+						
+						$(video).objectdetect("all", {size: 300, scaleMin: 3, scaleFactor: 1.1, classifier: objectdetect.handfist}, function(coords) {
+
+							if (coords.length > 0) {
+								console.log(fun);
+
+								if(videothing===true){
+									videothing=false;
+									fun.play();
+								}else if (videothing===false){
+									videothing=true;
+									fun.pause();
+								};
+								
+							
+								/* Find coordinates with maximum confidence: */
+								var coord = coords[0];
+								for (var i = coords.length - 1; i >= 0; --i)
+									if (coords[i][4] > coord[4]) coord = coords[i];
+								
+								/* Scroll window: */
+								var fist_pos = [coord[0] + coord[2] / 2, coord[1] + coord[3] / 2];
+								if (fist_pos_old) {
+									var dx = (fist_pos[0] - fist_pos_old[0]) / video.videoWidth,
+											dy = (fist_pos[1] - fist_pos_old[1]) / video.videoHeight;
+									
+										window.scrollBy(dx * 200, dy * 200);
+								} else fist_pos_old = fist_pos;
+								
+								/* Draw coordinates on video overlay: */
+								context.beginPath();
+								context.lineWidth = '2';
+								context.fillStyle = 'rgba(0, 255, 255, 0.5)';
+								context.fillRect(
+									coord[0] / video.videoWidth * canvas.clientWidth,
+									coord[1] / video.videoHeight * canvas.clientHeight,
+									coord[2] / video.videoWidth * canvas.clientWidth,
+									coord[3] / video.videoHeight * canvas.clientHeight);
+								context.stroke();
+							} else fist_pos_old = null;
+						});
+					}
+				}
+			});
+	};
+	
+
+		document.getElementById('link').href = 'javascript:(' + autoplay.toString() + ')()';
+	};
+	</script>
+</body>
+
+</html>

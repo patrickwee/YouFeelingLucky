@@ -1,0 +1,23 @@
+#special{
+	padding:0px 400px 0px 400px;	
+}
+
+#resultsTarget{
+	margin: 0 auto;
+	padding-top:40px;
+}
+
+#touch{
+	line-height: 20px;
+}
+
+#touch1{
+	line-height: 20px;
+}
+
+
+body{
+	background-image:url(background.jpg);
+	background-color: #cccccc;
+	background-size: 100%;
+}

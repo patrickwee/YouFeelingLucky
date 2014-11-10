@@ -7,17 +7,13 @@
 	padding-top:40px;
 }
 
-#touch{
-	line-height: 20px;
-}
-
-#touch1{
-	line-height: 20px;
-}
-
 
 body{
-	background-image:url(background.jpg);
-	background-color: #cccccc;
+	background-image:url(awesome.jpg);
 	background-size: 100%;
+}
+
+h1,h2,h3,h4,h5,h6,a,p{
+	color:white;
+
 }
